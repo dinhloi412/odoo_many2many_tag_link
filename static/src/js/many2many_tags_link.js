@@ -14,31 +14,10 @@ odoo.define("many2many_tags_link.widget", function (require) {
   var FieldMany2ManyTagsLink = relational_fields.FieldMany2ManyTags.extend({
     tag_template: "FieldMany2ManyTagsLink",
     events: _.extend({}, AbstractField.prototype.events, {
-      "click :not(.dropdown-toggle):not(.o_input_dropdown):not(.o_input):not(:has(.o_input)):not(.o_delete):not(:has(.o_delete))":
-        "_onClickLink",
-      "click .dropdown-toggle": "_onOpenColorPicker",
-      "mousedown .o_colorpicker a": "_onUpdateColor",
-      "mousedown .o_colorpicker .o_hide_in_kanban": "_onUpdateColor",
+      "click .o_delete": "_onDeleteTag",
+      "click .o_external_link": "_onClickLink",
     }),
-    // _openRelated: function (event) {
-    //     event.preventDefault();
-    //     event.stopPropagation();
-    //     var self = this;
 
-    //     var modelid = parseInt(event.currentTarget.getAttribute('modelid'));
-
-    //     if (this.mode === 'readonly' && !this.noOpen && modelid) {
-    //         this._rpc({
-    //                 model: this.field.relation,
-    //                 method: 'get_formview_action',
-    //                 args: [[modelid]],
-    //                 context: this.record.getContext(this.recordParams),
-    //             })
-    //             .then(function (action) {
-    //                 self.trigger_up('do_action', {action: action});
-    //             });
-    //     }
-    // },
     /**
      * @private
      * @param {jQuery} element
@@ -49,23 +28,12 @@ odoo.define("many2many_tags_link.widget", function (require) {
     },
 
     /**
-     * @override
-     */
-    init: function () {
-      this._super.apply(this, arguments);
-      this.hasDropdown = !!this.colorField;
-    },
-
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
-
-    /**
      * @private
      * @param {MouseEvent} ev
      */
     _onClickLink: function (ev) {
       ev.preventDefault();
+      ev.stopPropagation();
       if (this.nodeOptions.force_color || ev.shiftKey) {
         return;
       }
@@ -80,7 +48,6 @@ odoo.define("many2many_tags_link.widget", function (require) {
         readonly: true,
       }).open();
 
-      ev.stopPropagation();
       return;
     },
   });
